@@ -1,0 +1,6 @@
+.boy{
+    /* background-size: 60%; */
+    background-image: "../../assets/images/backg3.jpg";
+    background-color: "bg-gradient-to-r from-pink-300 via-pink-500 to-pink-700";
+    background-size: cover;
+  }

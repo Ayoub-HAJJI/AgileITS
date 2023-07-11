@@ -1,0 +1,39 @@
+{
+    "manifest_version": 2,
+    "name": "Salesforce AGILITS ",
+    "version": "1.0",
+    "icons":{
+      "16":"public/logo-AG.png",
+      "48":"public/logo-AG.png",
+      "128":"public/logo-AG.png"
+    },
+    "description": "This extension would allow users to manage their Agile projects without having to switch between different applications by connecting to the extension from their Salesforce org via authentication cookies. ",
+    "permissions": [
+      "cookies",
+      "activeTab",
+      "tabs",
+      "webRequest",
+      "webRequestBlocking",
+      "https://*.salesforce.com/*",
+      "https://*.force.com/*",
+      "http://localhost:3000/*"
+    ],
+    "content_scripts": [
+      {
+        "matches": ["https://*.salesforce.com/*"],
+        "js": ["./extension/content.js"],
+        "run_at": "document_start"
+      },
+      {
+        "matches": ["https://*.force.com/*"],
+        "js": ["./extension/content.js"],
+        "run_at": "document_start"
+      }
+    ],
+    "browser_action": {
+      "default_title": "Redirection",
+      "default_popup": "./extension/popup.html"
+    }
+    
+  }
+  
