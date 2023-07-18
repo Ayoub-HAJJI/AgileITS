@@ -1,4 +1,4 @@
-import { projectService } from "../../services";
+import { projectService2 } from "../../services";
 import { createAction } from ".";
 import { actionType } from "./type";
 import { notifitying } from "../../utils/notification";
@@ -6,37 +6,50 @@ import { notifitying } from "../../utils/notification";
 export const fetchAllProjects = (params) => {
   return async (dispatch) => {
     try {
-      const res = await projectService.fetchAllProjects(params);
-
-      dispatch(createAction(actionType.SET_PROJECT_LIST, res.data.content));
-      console.log("responsce eee",res);
+      const projects = await projectService2.fetchAllProjects(params);
+      console.log("ha data", projects);
+      dispatch(createAction(actionType.SET_PROJECT_LIST, projects));
+      console.log("ha data", projects);
     } catch (err) {
+      console.log("data majatx");
       console.log(err);
     }
   };
 };
 
-export const fetchAllProjectCategories = async (dispatch) => {
-  try {
-    const res = await projectService.fetchAllProjectCategories();
+export const fetchAllProjectCategories = () => {
+  console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
-    dispatch(createAction(actionType.SET_PROJECT_CATEGORIES, res.data.content));
-  } catch (err) {
-    console.log(err);
-  }
+  return async (dispatch) => {
+    console.log("e3333333333333");
+    try {
+      console.log("fetch actions 333222222222222222222222222222222");
+      const categories = await projectService2.fetchAllProjectCategories();
+      console.log("Categories:",categories);
+      dispatch(createAction(actionType.SET_PROJECT_CATEGORIES, categories));
+    } catch (err) {
+      console.log("makaynx Categories:");
+      console.log(err);
+    }
+  };
 };
 
 export const createProjectAuthorize = (data, callback) => {
+  console.log('createProjectAuthorize', data);
   return async (dispatch) => {
     dispatch(createAction(actionType.SET_PROJECT_ERROR, null));
     try {
-      const res = await projectService.createProjectAuthorize(data);
-      dispatch(createAction(actionType.SET_PROJECT_DETAIL, res.data.content));
+      console.log("try");
+      const projectId = await projectService2.createProjectAuthorize(data);
+      const projectDetail = await projectService2.fetchProjectDetail(projectId);
+
+      dispatch(createAction(actionType.SET_PROJECT_DETAIL, projectDetail));
 
       if (callback) {
         callback();
       }
     } catch (err) {
+      console.log("errrrror");
       console.log(err);
       dispatch(
         createAction(actionType.SET_PROJECT_ERROR, err.response.data.content)
@@ -46,17 +59,19 @@ export const createProjectAuthorize = (data, callback) => {
 };
 
 export const fetchUsersByProject = (projectId) => {
+  console.log('dakhlat lfetchusers');
   return async (dispatch) => {
     try {
-      const res = await projectService.fetchUsersByProject(projectId);
-
-      dispatch(createAction(actionType.SET_PROJECT_MEMBERS, res.data.content));
+      const users = await projectService2.fetchUsersByProject(projectId);
+      console.log('Fetching users:',users);
+      dispatch(createAction(actionType.SET_PROJECT_MEMBERS, users));
     } catch (err) {
       console.log(err);
       if (
         err.response.data.statusCode === 404 &&
         err.response.data.content === "User not found in the project!"
       ) {
+        console.log("iff 404");
         dispatch(createAction(actionType.SET_PROJECT_MEMBERS, []));
       }
     }
@@ -66,7 +81,7 @@ export const fetchUsersByProject = (projectId) => {
 export const assignUserToProject = (data, callback) => {
   return async (dispatch) => {
     try {
-      await projectService.assignUserToProject(data);
+      await projectService2.assignUserToProject(data);
 
       if (callback) {
         callback();
@@ -80,7 +95,7 @@ export const assignUserToProject = (data, callback) => {
 export const removeUserFromProject = (data, callback) => {
   return async (dispatch) => {
     try {
-      await projectService.removeUserFromProject(data);
+      await projectService2.removeUserFromProject(data);
 
       if (callback) {
         callback();
@@ -94,7 +109,7 @@ export const removeUserFromProject = (data, callback) => {
 export const deleteProject = (projectId, callback) => {
   return async (dispatch) => {
     try {
-      await projectService.deleteProject(projectId);
+      await projectService2.deleteProject(projectId);
 
       if (callback) {
         callback();
@@ -108,31 +123,32 @@ export const deleteProject = (projectId, callback) => {
 export const fetchProjectDetail = (projectId, callback) => {
   return async (dispatch) => {
     try {
-      const res = await projectService.fetchProjectDetail(projectId);
+      const projectDetail = await projectService2.fetchProjectDetail(projectId);
+      console.log("fetched projectdetail",projectDetail);
 
-      dispatch(createAction(actionType.SET_PROJECT_DETAIL, res.data.content));
+      dispatch(createAction(actionType.SET_PROJECT_DETAIL, projectDetail));
 
       if (callback) {
         callback();
       }
     } catch (err) {
+      console.log("kayn error fi fetchPd");
+
       console.log(err);
     }
   };
 };
 
-export const updateProject = (data, callBack)=>{
-  return async(dispatch)=>{
-    try{
-      const res = await projectService.updateProject(data)
-      console.log(res.data);
+export const updateProject = (data, callBack) => {
+  return async (dispatch) => {
+    try {
+      await projectService2.updateProject(data);
 
-      callBack()
-      notifitying('success', 'Project successfully updated')
-    }catch(err){
+      callBack();
+      notifitying('success', 'Project successfully updated');
+    } catch (err) {
       console.log({...err});
-      notifitying('warning', 'User failed to be deleted')
-
+      notifitying('warning', 'Project failed to be updated');
     }
-  }
-}
+  };
+};

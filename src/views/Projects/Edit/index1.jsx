@@ -7,8 +7,8 @@ import TinyMCEEditor from "../../../components/UI/Input/TinyMCEEditor";
 import {
   fetchAllProjectCategories,
   updateProject,
-} from "../../../store/actions/projectSF";
-import { createProjectSchema } from "../../../services/projectSF";
+} from "../../../store/actions/project";
+import { createProjectSchema } from "../../../services/project";
 
 const EditProject = (props) => {
   const dispatch = useDispatch();

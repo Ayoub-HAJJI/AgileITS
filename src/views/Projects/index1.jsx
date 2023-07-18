@@ -13,7 +13,7 @@ import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { fetchAllProjects, deleteProject } from "../../store/actions/projectSF";
+import { fetchAllProjects, deleteProject } from "../../store/actions/project";
 import { createAction } from "../../store/actions";
 import { actionType } from "../../store/actions/type";
 

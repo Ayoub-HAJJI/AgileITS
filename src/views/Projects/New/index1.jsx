@@ -9,8 +9,8 @@ import TinyMCEEditor from "../../../components/UI/Input/TinyMCEEditor";
 import {
   createProjectAuthorize,
   fetchAllProjectCategories,
-} from "../../../store/actions/projectSF";
-import { createProjectSchema } from "../../../services/projectSF";
+} from "../../../store/actions/project";
+import { createProjectSchema } from "../../../services/project";
 import { createAction } from "../../../store/actions";
 import { actionType } from "../../../store/actions/type";
 

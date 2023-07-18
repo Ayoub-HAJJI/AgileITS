@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, Typography } from "antd";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import { fetchAllUsers, updateUser } from "../../../store/actions/userSF";
+import { fetchAllUsers, updateUser } from "../../../store/actions/user";
 
 const EditUserModal = ({ visible, onCancel, user }) => {
   const { Id, Email__c, Name,phone_number__c } = user;

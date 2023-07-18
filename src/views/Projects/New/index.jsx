@@ -9,8 +9,8 @@ import TinyMCEEditor from "../../../components/UI/Input/TinyMCEEditor";
 import {
   createProjectAuthorize,
   fetchAllProjectCategories,
-} from "../../../store/actions/projectSF";
-import { createProjectSchema } from "../../../services/projectSF";
+} from "../../../store/actions/project";
+import { createProjectSchema } from "../../../services/project";
 import { createAction } from "../../../store/actions";
 import { actionType } from "../../../store/actions/type";
 
@@ -22,6 +22,8 @@ const NewProject = (props) => {
   const serverError = useSelector((state) => state.project.error);
   const projectDetail = useSelector((state) => state.project.projectDetail);
   const [showAddMembersModal, setShowAddMembersModal] = useState(false);
+  console.log('project detaim from new index ',projectDetail);
+
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +44,6 @@ const NewProject = (props) => {
 
   useEffect(() => {
     dispatch(fetchAllProjectCategories);
-    console.log("fetch from index usinf useEffect")
   }, [dispatch]);
 
 
@@ -67,6 +68,7 @@ const NewProject = (props) => {
       createProjectAuthorize(formik.values, () => {
         formik.resetForm();
         setShowAddMembersModal(true);
+        console.log('setShowAddMembersModal(true)')
       })
     );
   };
@@ -75,7 +77,6 @@ const NewProject = (props) => {
     dispatch(createAction(actionType.SET_PROJECT_DETAIL, null));
     setShowAddMembersModal(false);
   };
-  console.log("projectCategories:",projectCategories)
 
   return (
     <div style={{ maxWidth: 980 }} className="mx-auto">
@@ -162,7 +163,7 @@ const NewProject = (props) => {
 
           <Button
             htmlType="submit"
-            className="flex justify-center items-center h-8 bg-blue-800 hover:bg-blue-600 focus:bg-blue-600 text-white hover:text-white focus:text-white font-medium py-1.5 px-3 rounded border-0"
+            className="flex justify-center items-center h-8 bg-blue-800 hover:bg-blue-700 focus:bg-blue-800 text-white hover:text-white focus:text-white font-medium py-1.5 px-3 rounded border-0"
           >
             Create project
           </Button>

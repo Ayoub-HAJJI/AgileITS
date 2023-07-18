@@ -8,7 +8,7 @@ import { ReactComponent as BugIcon } from "../../../assets/images/icons/bug.svg"
 
 const TaskItem = ({ listTaskDetailItem, index, onClick }) => {
   return (
-    <Draggable draggableId={listTaskDetailItem.Id.toString()} index={index}>
+    <Draggable draggableId={listTaskDetailItem.taskId.toString()} index={index}>
       {(provided) => {
         return (
           <div
@@ -20,37 +20,37 @@ const TaskItem = ({ listTaskDetailItem, index, onClick }) => {
           >
             <Row>
               <Col span={18}>
-                {listTaskDetailItem.TaskName__c && (
-                  <div className="mb-2 ">{listTaskDetailItem.TaskName__c}</div>
+                {listTaskDetailItem.taskName && (
+                  <div className="mb-2 ">{listTaskDetailItem.taskName}</div>
                 )}
-                {!listTaskDetailItem.TaskName__c && (
+                {!listTaskDetailItem.taskName && (
                   <div className="mb-2 text-gray-400">Unnamed</div>
                 )}
 
                 <div className="flex justify-start items-center">
-                  {/* <Tooltip
+                  <Tooltip
                     title={
-                      listTaskDetailItem.TaskType__r.Name__c
+                      listTaskDetailItem.taskTypeDetail.taskType
                         .charAt(0)
                         .toUpperCase() +
-                      listTaskDetailItem.TaskType__r.Name__c.slice(1)
+                      listTaskDetailItem.taskTypeDetail.taskType.slice(1)
                     }
                     placement="bottom"
                   >
-                    {listTaskDetailItem.TaskType__r.Id__c === 1 && (
+                    {listTaskDetailItem.taskTypeDetail.id === 1 && (
                       <BugIcon className="mr-1" />
                     )}
-                    {listTaskDetailItem.TaskType__r.Id__c === 2 && (
+                    {listTaskDetailItem.taskTypeDetail.id === 2 && (
                       <NewTaskIcon className="mr-1" />
                     )}
-                  </Tooltip> */}
+                  </Tooltip>
 
                   <TaskItemPriorityBadge
-                    priorityTask={listTaskDetailItem.Priority__r.Name}
+                    priorityTask={listTaskDetailItem.priorityTask}
                   />
                 </div>
               </Col>
-              {/* <Col span={6}>
+              <Col span={6}>
                 <div className="h-full w-full flex justify-end items-end">
                   {!listTaskDetailItem.assigness.length && (
                     <Tooltip title="Unassigned" placement="top">
@@ -73,7 +73,7 @@ const TaskItem = ({ listTaskDetailItem, index, onClick }) => {
                     </Avatar.Group>
                   )}
                 </div>
-              </Col> */}
+              </Col>
             </Row>
           </div>
         );

@@ -4,6 +4,7 @@ import { actionType } from "./type";
 import { notifitying } from "../../utils/notification";
 
 export const updateTaskStatus = ({ taskId, statusId }, callback) => {
+  console.log("from actio----------TaskId:",taskId,"statusId:",statusId);
   return async (dispatch) => {
     try {
       await taskService.updateTaskStatus(taskId, statusId);
@@ -54,8 +55,6 @@ export const createTask = (data, callback) => {
 export const fetchAllTaskTypes = async (dispatch) => {
   try {
     const res = await taskService.fetchAllTaskTypes();
-    console.log('res tasktype',res.records);
-
     dispatch(createAction(actionType.SET_TASK_TYPES, res.records));
   } catch (err) {
     console.log(err);

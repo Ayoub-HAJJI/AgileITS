@@ -17,23 +17,29 @@ import {
   assignUserToProject,
   fetchUsersByProject,
   removeUserFromProject,
-} from "../../../store/actions/projectSF";
-import { fetchAllUsers } from "../../../store/actions/userSF";
+} from "../../../store/actions/project";
+import { fetchAllUsers } from "../../../store/actions/user";
+console.log('addmemebers modal');
 
 const AddMembersModal = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const projectMembers = useSelector((state) => state.project.projectMembers);
+  console.log('projectmemebers ',projectMembers);
+
   const userList = useSelector((state) => state.user.userList);
+  console.log('UserList ',userList);
+
   const [filteredUsers, setFilteredUsers] = useState([]);
   const usersRef = useRef(null);
   const searchRef = useRef(null);
 
   useEffect(() => {
-    dispatch(fetchUsersByProject(props.project.id));
+    dispatch(fetchUsersByProject(props.project.Id));
     dispatch(fetchAllUsers());
-  }, [dispatch, props.project.id]);
+  }, [dispatch, props.project.Id]);
 
+  console.log('project id',props.project.Id);
   useEffect(() => {
     const clonedUsers = [...userList];
 
@@ -42,7 +48,7 @@ const AddMembersModal = (props) => {
     // remove members from user list
     for (const member of projectMembers) {
       const index = clonedUsers.findIndex((item) => {
-        return item.userId === member.userId;
+        return item.Id__c === member.Id__c;
       });
 
       clonedUsers.splice(index, 1);
@@ -57,20 +63,21 @@ const AddMembersModal = (props) => {
     }
   }, [projectMembers, userList]);
 
-  const addMemberToProject = (userId) => () => {
-    const data = { projectId: props.project.id, userId };
+  const addMemberToProject = (Id) => () => {
+    const data = { projectId: props.project.Id, Id };
+    console.log("data 222222",data);
     dispatch(
       assignUserToProject(data, () => {
-        dispatch(fetchUsersByProject(props.project.id));
+        dispatch(fetchUsersByProject(props.project.Id));
       })
     );
   };
 
-  const removeMemberFromProject = (userId) => () => {
-    const data = { projectId: props.project.id, userId };
+  const removeMemberFromProject = (Id) => () => {
+    const data = { projectId: props.project.Id, Id };
     dispatch(
       removeUserFromProject(data, () => {
-        dispatch(fetchUsersByProject(props.project.id));
+        dispatch(fetchUsersByProject(props.project.Id));
       })
     );
   };
@@ -81,36 +88,40 @@ const AddMembersModal = (props) => {
   };
 
   const handleSearchUsers = (e) => {
-    const value = searchRef.current.input.value
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-    const clonedUsers = [...usersRef.current];
-
-    let foundUsers = [];
-
-    for (const i in clonedUsers) {
-      if (
-        clonedUsers[i].name
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .includes(value)
-      ) {
-        foundUsers.push(clonedUsers[i]);
+    const value = searchRef.current?.input?.value?.toLowerCase?.();
+  
+    if (typeof value !== 'undefined') {
+      const normalizedValue = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  
+      const clonedUsers = [...usersRef.current];
+  
+      let foundUsers = [];
+  
+      for (const i in clonedUsers) {
+        if (
+          clonedUsers[i].Name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .includes(normalizedValue)
+        ) {
+          foundUsers.push(clonedUsers[i]);
+        }
       }
+  
+      setFilteredUsers([...foundUsers]);
     }
-
-    setFilteredUsers([...foundUsers]);
   };
+  
+  
+  console.log('filtredusers',filteredUsers);
 
   return (
     <Modal
       title={
         <Typography.Title level={4} className="mb-0">
           Add members to project{" "}
-          <span className="text-blue-700">{props.project.projectName}</span>
+          <span className="text-blue-700">{props.project.Name}</span>
         </Typography.Title>
       }
       visible={props.visible}
@@ -173,15 +184,15 @@ const AddMembersModal = (props) => {
             renderItem={(item) => (
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={<a href="https://ant.design">{item.name}</a>}
+                 // avatar={<Avatar src={item.avatar__c} />}
+                  title={<a href="https://ant.design">{item.Name}</a>}
                   description={
-                    <div className="text-xs">User ID: {item.userId}</div>
+                    <div className="text-xs">User ID: {item.Id}</div>
                   }
                 />
                 <div>
                   <Button
-                    onClick={addMemberToProject(item.userId)}
+                    onClick={addMemberToProject(item.Id)}
                     className="flex justify-center items-center h-8 bg-blue-700 hover:bg-blue-600 focus:bg-blue-600 text-white hover:text-white focus:text-white font-medium py-1.5 px-3 rounded border-0"
                   >
                     Add
@@ -206,15 +217,15 @@ const AddMembersModal = (props) => {
             renderItem={(item) => (
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={<a href="https://ant.design">{item.name}</a>}
+                  //avatar={<Avatar src={item.avatar__c} />}
+                  title={<a href="https://ant.design">{item.Membre__r.Name}</a>}
                   description={
-                    <div className="text-xs">User ID: {item.userId}</div>
+                    <div className="text-xs">User ID: {item.Membre__r.Id}</div>
                   }
                 />
                 <div>
                   <Button
-                    onClick={removeMemberFromProject(item.userId)}
+                    onClick={removeMemberFromProject(item.Membre__r.Id)}
                     className="flex justify-center items-center h-8 bg-red-700 hover:bg-red-600 focus:bg-red-600 text-white hover:text-white focus:text-white font-medium py-1.5 px-3 rounded border-0"
                   >
                     Remove

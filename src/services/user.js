@@ -1,40 +1,34 @@
-import axiosClient from "./axiosClient";
-import * as yup from "yup";
+import { salesforceConnection } from "./salesforceConnection";
 
-export const editUserSchema = yup.object().shape({
-  email: yup.string().required("Email is required").email("Email is invalid"),
-  name: yup.string().required("Name is required"),
-  phoneNumber: yup
-    .string()
-    .matches(/^[0-9]+$/, "Phone number must contain numbers only"),
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters long"),
-  passwordConfirmation: yup
-    .string()
-    .required("Password confirmation is required")
-    .oneOf([yup.ref("password")], "Password confirmation does not match"),
-});
-
-class UserService {
-  fetchAllUsers(params) {
-    return axiosClient.get("/api/Users/getUser", { params });
+class UserService2 {
+  async fetchAllUsers(params) {
+    const query = 'SELECT Id, Name, Email__c, phone_number__c FROM Membre__c';
+    const result = await salesforceConnection.query(query);
+    console.log("users:",result);
+    return result.records;
   }
 
-  deleterUser(id) {
-    return axiosClient.delete(`api/Users/deleteUser?id=${id}`);
+  async deleterUser(id) {
+    await salesforceConnection.sobject('Membre__c').destroy(id);
   }
 
-  getMembersByProjectId(projectId) {
-    return axiosClient.get(
-      `/api/Users/getUserByProjectId?idProject=${projectId}`
-    );
+  async getMembersByProjectId(projectId) {
+    const query = `select Membre__r.name,Membre__r.Id,Membre__r.avatar__c  from Project_Member__c where Project__r.Id  = '${projectId}'`;
+    const result = await salesforceConnection.query(query);
+    return result.records;
   }
 
-  updateUser(data) {
-    return axiosClient.put("/api/Users/editUser", data);
+  async updateUser(data) {
+    const sObject = {
+      Id: data.Id,
+      Name: data.Name,
+      Email__c: data.Email__c,
+      phone_number__c:data.phone_number__c
+      // Update other fields as needed
+    };
+    const result = await salesforceConnection.sobject('Membre__c').update(sObject);
+    return result.success;
   }
 }
 
-export default UserService;
+export default UserService2;

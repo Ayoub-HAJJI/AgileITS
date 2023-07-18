@@ -3,8 +3,8 @@ import thunk from "redux-thunk";
 
 // reducers
 import me from "./reducers/me";
-import user from "./reducers/userSF";
-import project from "./reducers/projectSF";
+import user from "./reducers/user";
+import project from "./reducers/project";
 import task from "./reducers/task";
 import drawerModal from "./reducers/drawerModal";
 import priority from "./reducers/priority";

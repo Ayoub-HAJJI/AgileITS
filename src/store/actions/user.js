@@ -1,4 +1,4 @@
-import { userService } from "../../services";
+import { userService2 } from "../../services";
 import { createAction } from ".";
 import { actionType } from "./type";
 import { notifitying } from "../../utils/notification";
@@ -6,9 +6,9 @@ import { notifitying } from "../../utils/notification";
 export const fetchAllUsers = (params) => {
   return async (dispatch) => {
     try {
-      const res = await userService.fetchAllUsers(params);
-
-      dispatch(createAction(actionType.SET_USER_LIST, res.data.content));
+      const users = await userService2.fetchAllUsers(params);
+      ///console.log('userlist from action user',users);
+      dispatch(createAction(actionType.SET_USER_LIST, users));
     } catch (err) {
       console.log(err);
     }
@@ -18,7 +18,7 @@ export const fetchAllUsers = (params) => {
 export const deleteUser = (id) => {
   return async (dispatch) => {
     try {
-      await userService.deleterUser(id);
+      await userService2.deleterUser(id);
 
       dispatch(fetchAllUsers());
 
@@ -33,9 +33,9 @@ export const deleteUser = (id) => {
 export const getMembersByProjectId = (id) => {
   return async (dispatch) => {
     try {
-      const res = await userService.getMembersByProjectId(id);
+      const members = await userService2.getMembersByProjectId(id);
 
-      dispatch(createAction(actionType.GET_PROJECT_MEMBERS, res.data.content));
+      dispatch(createAction(actionType.GET_PROJECT_MEMBERS, members));
     } catch (err) {
       dispatch(createAction(actionType.GET_PROJECT_MEMBERS, []));
       console.log(err);
@@ -44,9 +44,9 @@ export const getMembersByProjectId = (id) => {
 };
 
 export const updateUser = (data, callback) => {
-  return async () => {
+  return async (dispatch) => {
     try {
-      userService.updateUser(data);
+      await userService2.updateUser(data);
 
       if (callback) {
         callback();

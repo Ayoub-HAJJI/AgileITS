@@ -7,11 +7,11 @@ const initialState = {
   projectDetail: null,
   error: null,
   projectEditInfo:{
-    "Id": 0,
-    "Name": "string",
-    "creator__r.Id__c": 0,
-    "Description__c": "string",
-    "CategoryId__c": 1
+    "id": 0,
+    "projectName": "string",
+    "creator": 0,
+    "description": "string",
+    "categoryId": 1
   }
 };
 

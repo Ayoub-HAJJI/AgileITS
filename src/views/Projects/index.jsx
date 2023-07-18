@@ -13,7 +13,7 @@ import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { fetchAllProjects, deleteProject } from "../../store/actions/projectSF";
+import { fetchAllProjects, deleteProject } from "../../store/actions/project";
 import { createAction } from "../../store/actions";
 import { actionType } from "../../store/actions/type";
 
@@ -127,12 +127,7 @@ const Projects = (props) => {
       </div>
 
       <Table className="shadow-lg" dataSource={dataSource}>
-        <Table.Column
-          title="Id"
-          dataIndex="Id"
-          key="Id"
-          sorter={(a, b) => a.Id - b.Id}
-        />
+        
         <Table.Column
           title="Project name"
           dataIndex="Name"
@@ -176,7 +171,7 @@ const Projects = (props) => {
       return (
         <Avatar.Group
           maxCount={2}
-          maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+          maxStyle={{ color: "#f56a00", backgroundColor:"rgb(241, 240, 255)" }}
         >
           {Project_Members__r.records.map((member) => (
             <Tooltip title={member?.Membre__r?.Name} key={member?.Id}>

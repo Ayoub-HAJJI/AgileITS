@@ -8,7 +8,7 @@ export const logIn = (values, callback) => {
   return async (dispatch) => {
     try {
       const res = await authService.logIn(values);
-      swal("To team Jira 6!", "API successfully called!", "success");
+      swal("API successfully called!", "success");
 
       dispatch(createAction(actionType.SET_ME, res.data.content));
 

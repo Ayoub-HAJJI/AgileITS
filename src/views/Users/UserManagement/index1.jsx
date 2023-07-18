@@ -6,7 +6,7 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { deleteUser, fetchAllUsers } from "../../../store/actions/userSF";
+import { deleteUser, fetchAllUsers } from "../../../store/actions/user";
 import EditUserModal from "../../../components/Users/EditUserModal";
 
 const UserManagment = (props) => {

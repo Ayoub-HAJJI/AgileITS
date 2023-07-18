@@ -32,28 +32,24 @@ const Tasks = (props) => {
   const [selectedTask, setSelectedTask] = useState(null);
   const newTaskRef = useRef(null);
   const { projectId } = props.match.params;
-  //console.log("I am in tasks/index");
-  console.log("ProjectId ",projectId);
-
-
+  console.log('hii rihab');
 
   const formik = useFormik({
     initialValues: {
       listUserAsign: [],
-      TaskName__c: "",
-      Description__c: "",
-      Status__r:{Id: "1"},
-      originalEstimate__c: 0,
-      TimeTrackingSpent__c: 0,
-      timeTrackingRemeaining__c: 0,
-      Task_Project__r:{Id: projectId},
+      taskName: "",
+      description: "",
+      statusId: "1",
+      originalEstimate: 0,
+      timeTrackingSpent: 0,
+      timeTrackingRemaining: 0,
+      projectId: projectId,
       typeId: 1,
-      Priority__r:{Id:2},
+      priorityId: 2,
     },
   });
 
   useEffect(() => {
-    console.log('useeffect');
     dispatch(fetchProjectDetail(projectId));
     dispatch(fetchAllTaskTypes);
 
@@ -63,21 +59,15 @@ const Tasks = (props) => {
     };
   }, [dispatch, projectId]);
 
-  //console.log("ProjectDetail from task ",projectDetail);
-
-
   useEffect(() => {
-    console.log("useEffect setclonedprojectdetiual");
     setClonedProjectDetail({ ...projectDetail });
   }, [projectDetail]);
-
-  //console.log("clonedProjectDetail",clonedProjectDetail);
-
+  console.log("projectdetail",projectDetail);
 
   useEffect(() => {
     if (taskError === "Task already exists!") {
       formik.setErrors({
-        TaskName__c: taskError,
+        taskName: taskError,
         ...formik.errors,
       });
     }
@@ -110,60 +100,39 @@ const Tasks = (props) => {
     ) {
       return;
     }
-    console.log("clonedProjectDetail before",clonedProjectDetail);
-    console.log(" draggableId : ", draggableId);
-    console.log(" source : ", source);
-    console.log(" destination : ", destination);
-
 
     const draggedItem = {
-      ...clonedProject.Statuss__r[source.droppableId].Tasks1__r?.records[source.index],
+      ...clonedProject.lstTask[source.droppableId - 1].lstTaskDeTail[
+        source.index
+      ],
     };
-    
-    console.log("draggedItem", draggedItem);
-    
-    
-    // Check if 'tasks1__r' property exists before modifying the records
-    if (clonedProject.Statuss__r[source.droppableId].Tasks1__r) {
-      clonedProject.Statuss__r[source.droppableId].Tasks1__r.records.splice(
-        source.index,
-        1
-      );
-    }
+    console.log('clonedProjectttttttttttt',clonedProject);
 
-    if (!clonedProject.Statuss__r[destination.droppableId].Tasks1__r) {
-      clonedProject.Statuss__r[destination.droppableId].Tasks1__r = {
-        records: [],
-      };
-    }
-    if (clonedProject.Statuss__r[destination.droppableId].Tasks1__r) {
 
-        clonedProject.Statuss__r[destination.droppableId].Tasks1__r.records.splice(
-        destination.index,
-        0,
-        draggedItem
-      );
-    }
-    
-    
-    setClonedProjectDetail({ ...clonedProject });
-    
+    clonedProject.lstTask[source.droppableId - 1].lstTaskDeTail.splice(
+      source.index,
+      1
+    );
 
-    console.log("clonedProjectDetail after ",clonedProjectDetail);
+    clonedProject.lstTask[destination.droppableId - 1].lstTaskDeTail.splice(
+      destination.index,
+      0,
+      draggedItem
+    );
+    console.log("clonedProjectggggggggggggggggg",clonedProject.lstTask)
 
+    setClonedProjectDetail(clonedProject);
 
     dispatch(
       updateTaskStatus(
         {
-          taskId: draggableId,  //taskId
+          taskId: draggableId,
           statusId: destination.droppableId,
-          projectId:projectId
         },
         () => dispatch(fetchProjectDetail(projectId))
       )
     );
   };
-  console.log("clonedProjectDetail",clonedProjectDetail);
 
   const handleKeyDownOnNewTaskTextarea = (e) => {
     // keyCode = 27 <=> press ESC button
@@ -175,7 +144,7 @@ const Tasks = (props) => {
     if (e.keyCode === 13) {
       e.preventDefault();
 
-      if (!formik.values.TaskName__c.trim().length) {
+      if (!formik.values.taskName.trim().length) {
         return;
       }
 
@@ -211,8 +180,6 @@ const Tasks = (props) => {
     setSelectedTask(null);
     setShowEditTaskModal(false);
   };
-console.log("i am heeere");
-console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
 
   return (
     <>
@@ -220,29 +187,26 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
         <Breadcrumb.Item>
           <Link to="/projects">Projects</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item >{clonedProjectDetail?.Name}</Breadcrumb.Item>
+        <Breadcrumb.Item >{clonedProjectDetail?.projectName}</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Typography.Title level={3} >Board</Typography.Title>
+      <Typography.Title level={3}>Board</Typography.Title>
 
       <Row gutter={16}>
         <DragDropContext onDragEnd={handleDragEnd}>
-
-        {clonedProjectDetail && clonedProjectDetail.Statuss__r && clonedProjectDetail.Statuss__r.map((listTaskItem) => {
-                 // console.log("listTaskItem",listTaskItem);
-
+          {clonedProjectDetail?.lstTask?.map((listTaskItem) => {
             return (
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 12 }}
                 lg={{ span: 6 }}
-                key={listTaskItem.Id} //statusId
+                key={listTaskItem.statusId}
                 className="mb-4"
               >
                 <div className=" bg-white shadow-lg w-full h-full p-2 rounded flex flex-col">
-                  <TaskListTitle title={listTaskItem.Name} />
+                  <TaskListTitle title={listTaskItem.statusName} />
 
-                  <Droppable droppableId={listTaskItem.Id__c}>
+                  <Droppable droppableId={listTaskItem.statusId}>
                     {(provided) => {
                       return (
                         <div
@@ -250,11 +214,11 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
                           {...provided.droppableProps}
                           className="flex-grow "
                         >
-                      {listTaskItem && listTaskItem.Tasks1__r && listTaskItem.Tasks1__r.records?.map(
+                          {listTaskItem.lstTaskDeTail.map(
                             (listTaskDetailItem, index) => {
                               return (
                                 <TaskItem
-                                  key={listTaskDetailItem.Id}
+                                  key={listTaskDetailItem.taskId}
                                   listTaskDetailItem={listTaskDetailItem}
                                   index={index}
                                   onClick={handleClickTaskItem(
@@ -264,11 +228,10 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
                               );
                             }
                           )}
-                          
 
                           {provided.placeholder}
 
-                          {listTaskItem.Name === "BACKLOG" && (
+                          {listTaskItem.statusName === "BACKLOG" && (
                             <>
                               {!showNewTaskTextarea && (
                                 <button
@@ -283,7 +246,7 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
                                 <>
                                   <div
                                     className={`bg-white border-2 mt-1 rounded${
-                                      formik.errors.TaskName__c
+                                      formik.errors.taskName
                                         ? " border-red-500 focus:border-red-500"
                                         : " border-blue-400 focus:border-blue-400"
                                     }`}
@@ -295,8 +258,8 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
                                       className="w-full pt-2 px-2 outline-none resize-none"
                                       onKeyDown={handleKeyDownOnNewTaskTextarea}
                                       autoFocus
-                                      name="TaskName__c"
-                                      value={formik.values.TaskName__c}
+                                      name="taskName"
+                                      value={formik.values.taskName}
                                       onChange={formik.handleChange}
                                       onBlur={handleBlurNewTaskTextarea}
                                       ref={newTaskRef}
@@ -362,9 +325,9 @@ console.log("clonedProjectDetail.statuss_r",clonedProjectDetail?.Statuss__r);
                                       })}
                                     </Select>
                                   </div>
-                                  {formik.errors.TaskName__c && (
+                                  {formik.errors.taskName && (
                                     <div className="text-red-500">
-                                      {formik.errors.TaskName__c}
+                                      {formik.errors.taskName}
                                     </div>
                                   )}
                                 </>
